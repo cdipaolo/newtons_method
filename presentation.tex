@@ -1,0 +1,70 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb}
+
+\newcommand{\RR}{\mathbf{R}}
+
+%% Title Information %%
+\title{Newton's Method for Convex Optimization}
+\author{Conner DiPaolo, Jeffrey Rutledge, Colin Adams}
+\institute{Harvey Mudd College}
+\date{February, 2016}
+
+
+\begin{document}
+
+\frame{\titlepage}
+
+%% How To Find Roots %%
+\begin{frame}
+    \frametitle{Finding Roots of Functions}
+    Given a differentiable function $f :
+    \RR \mapsto \RR$ we want to find the
+    instances when $f(x) = 0$ (not generally
+    solvable in closed form).
+
+    \textbf{Newton's Method:}
+    \begin{enumerate}
+        \item Take a starting position $x_0$
+        \item Find where the tangent line $y = f(x_n) + (x_{n+1}-x_n)f^\prime(x_n)$
+              is $0$ and iterate:
+              \begin{align*}
+                y &= f(x_n) + (x_{n+1}-x_n)f^\prime(x_n) = 0\\
+                x_{n+1} &= x_n - \frac{f(x_n)}{f^\prime(x_n)}\\
+              \end{align*}
+    \end{enumerate}
+
+\end{frame}
+
+%% Plots of Root Finding %%
+\begin{frame}
+    \frametitle{Finding Roots of Functions}
+    Initial $x_0 = 0.4$, $f(x) = (x-1) (x-3)^2
+    +e^{\left.\frac{1}{3}\right/x}-\cos\left(
+    \frac{x}{2}\right)-1.5$
+    \begin{center}
+        \includegraphics<1|only@1>[width=3in]{plots/root_plt_0.png}
+        \includegraphics<2|only@1>[width=3in]{plots/root_plt_1.png}
+        \includegraphics<3|only@1>[width=3in]{plots/root_plt_2.png}
+        \includegraphics<4|only@1>[width=3in]{plots/root_plt_3.png}
+    \end{center}
+    \begin{align*}
+        \only<1|only@1>{x_0 = 0.4 \;\;\; \Delta = 0.9805}
+        \only<2|only@1>{x_1 = 0.6866 \;\;\; \Delta = 0.6938}
+        \only<3|only@1>{x_2 = 0.9938 \;\;\; \Delta = 0.3866}
+        \only<4|only@1>{x_3 = 1.2050 \;\;\; \Delta = 0.1754}
+    \end{align*}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Optimizing Function Using Newton's Method}
+    Instead of finding wheren $f(x)=0$, how 
+    can we find where $f^\prime(x)=0$? Same
+    method:
+    \[
+        x_{n+1} = x_n - \frac{f^\prime(x_n)}{f^{\prime\prime}(x_n)}
+    \]
+
+\end{frame}
+
+\end{document}
