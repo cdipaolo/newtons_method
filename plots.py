@@ -26,7 +26,7 @@ def plot_root_find():
             ax.annotate('$x_{}$'.format(i), xy=(root,0), 
                     xytext=(-5,10), xycoords='data', 
                     textcoords='offset points')
-            ax.plot((root,root), (0,f1(root)), color='grey', alpha=0.3)
+            ax.plot((root,root), (0,f1(root)), color='grey', alpha=0.9)
         ax.plot((root_L[i],root_L[i+1]),(f1(root_L[i]),0), color='green', alpha=0.8)
 
         # make axes w/ spines
