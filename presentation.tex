@@ -7,7 +7,7 @@
 \newcommand{\pp}[2]{\frac{\partial^2 f}{\partial #1 \partial #2}}
 
 %% Title Information %%
-\title{Newton's Method for Convex Optimization}
+\title{Newton-Raphson Method for Convex Optimization}
 \author{Conner DiPaolo, Jeffrey Rutledge, Colin Adams}
 \institute{Harvey Mudd College}
 \date{February, 2016}
@@ -70,7 +70,7 @@
     \]
     \textbf{Def:} The gradient of $f: \RR^n \mapsto \RR$ is
     \[
-        \nabla f = \m{\frac{\partial}{\partial x_1}f, \frac{\partial}{\partial x_2}f, \dots, \frac{\partial}{\partial x_n}f}.
+        \nabla f = \m{\frac{\partial}{\partial x_1}f & \frac{\partial}{\partial x_2}f & \dots & \frac{\partial}{\partial x_n}f}.
     \]
     \textbf{Def:} The Hessian of $f: \RR^n \mapsto \RR$ is
     \[

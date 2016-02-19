@@ -15,7 +15,7 @@ def plot_root_find():
     '''
     root_L = newtons_method(f1, f1prime, 0.4, iters=28)
     # print progression of roots
-    for i,root in enumerate(root_L[:5]):
+    for i,root in enumerate(root_L[:28]):
         print('==> Root {} : {} | D = {}'.format(i, root, np.abs(root-root_L[-1])))
     for i in range(len(root_L[:5])-1):
         roots = root_L[:i+1]
