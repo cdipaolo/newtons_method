@@ -1,8 +1,10 @@
 import numpy as np
 from numpy.linalg import inv
+from numpy.random import uniform
 from matplotlib import pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.mlab import griddata
+import colormaps as cmaps
 
 ## make plot of root-finding
 ##
@@ -16,6 +18,7 @@ def plot_root_find():
     uses newton's method to find the root 
     of f1 and plots that
     '''
+    print('==> Finding Roots of a Function f : R -> R')
     root_L = newtons_method(f1, f1prime, 0.4, iters=28)
     # print progression of roots
     for i,root in enumerate(root_L[:28]):
@@ -52,25 +55,34 @@ def plot_root_find():
         plt.ylabel('$y$')
         plt.savefig('plots/root_plt_{}.png'.format(i), bbox_inches='tight')
 
-def f2_mult(x,y):
-    return -np.cos(x*x + y*y) - np.exp(-x*x - y*y)
-
 def f2(x):
     '''f2 : R^2 -> R'''
-    xx = np.sum(x*x, axis=1)
+    if len(x.shape) > 1:
+        xx = np.sum(x*x, axis=1)
+    else:
+        xx = x[0]*x[0] + x[1]*x[1]
     return -np.cos(xx) - np.exp(-xx)
 
+def f2_point(x,y):
+    '''f2 at a point'''
+    return -np.cos(x*x + y*y) - np.exp(-x*x - y*y)
 
 def f2grad(x):
     '''second function gradient'''
-    xx = np.sum(x*x, axis=1)
+    if len(x.shape) > 1:
+        xx = np.sum(x*x, axis=1)
+    else:
+        xx = x[0]*x[0] + x[1]*x[1]
     constant = 2*np.exp(-xx) + 2*np.sin(xx)
-    return np.array([x*constant, y*constant])
+    return np.array([x[0]*constant, x[1]*constant])
 
 def f2hessian(x):
     '''second functon inverse hessian
     evaluated at x'''
-    xx = np.sum(x*x, axis=1)
+    if len(x.shape) > 1:
+        xx = np.sum(x*x, axis=1)
+    else:
+        xx = x[0]*x[0] + x[1]*x[1]
     # compute the hessian
     A = np.zeros((2,2))
     A[0,0] = 2*(2*x[0]*x[0]*np.cos(xx) + np.exp(-xx) * (1 - 2*x[0]*x[0] + np.exp(xx) * np.sin(xx)))
@@ -79,29 +91,76 @@ def f2hessian(x):
     A[1,1] = 2*(2*x[1]*x[1]*np.cos(xx) + np.exp(-xx) * (1 - 2*x[1]*x[1] + np.exp(xx) * np.sin(xx)))
     return inv(A) # returns the inverse of the hessian
 
-def plot_f2():
+def plot_f2(num_points = 20):
     '''makes a single plot of
     the function f2 in R^3 for
     evaluation purposes'''
-    x = np.mgrid[-2:2:0.1,-2:2:0.1].reshape(2,-1).T
-    z = f2(x)
-    X,Y,Z = grid(x[:,0],x[:,1],z)
+    x = np.outer(np.linspace(-2, 2, num_points), np.ones(num_points))
+    y = x.copy().T
+    z = -np.cos(x**2 + y**2) - np.exp(-x**2 - y**2)
+
     fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
-    ax.plot_surface(X,Y,Z, color='red', alpha=0.9, label='$f(x) = -\cos(x^2 + y^2) - e^{-(x^2 + y^2)}$')
+    ax = plt.axes(projection='3d')
+
+    ax.plot_surface(x,y,z, cmap=plt.cm.jet, rstride=1, cstride=1, linewidth=0, color='red', alpha=0.9, label='$f(x) = -\cos(x^2 + y^2) - e^{-(x^2 + y^2)}$')
+    plt.title("Newton's Method for Optimization")
+    plt.xlabel('$x$')
+    plt.ylabel('$y$')
     plt.show()
 
-def plot_optimize():
+def plot_optimize(num_points=50):
     '''
     uses newton's method to optimize
     a function
         f : R^n -> R
     and plot the progression
     '''
-    root_L = newtons_method_opt(f2grad, f2hessian, 0.4, iters=28)
+    root_L = newtons_method_opt(f2grad, f2hessian, np.array([1,0.6]), iters=5)
+    # print progression of roots
+    print('\n\n==> Optimization of a Function f : R^2 -> R')
+    for i,root in enumerate(root_L):
+        print('==> Root {} : {} | D = {} | f {}'.format(i, root, np.abs(root-root_L[-1]), f2(root)))
+    for i in range(len(root_L[:5])-1):
+        roots = np.array(root_L[:i])
+
+        x = np.outer(np.linspace(-2, 2, num_points), np.ones(num_points))
+        y = x.copy().T
+        z = -np.cos(x**2 + y**2) - np.exp(-x**2 - y**2)
+
+        fig = plt.figure(figsize=plt.figaspect(0.5))
+        ax = fig.add_subplot(122, projection='3d')
+
+        ax.plot_surface(x,y,z, cmap=cmaps.viridis, rstride=1, cstride=1, linewidth=0, color='red', alpha=0.5)
+        ax.set_xlim3d(-2,2)
+        ax.set_ylim3d(-2,2)
+        ax.set_zlim3d(-2,1)
+        ax.set_xlabel('$x$')
+        ax.set_ylabel('$y$')
+        ax.set_zlabel('$z$')
+
+        if len(roots) > 0:
+            ax.plot(roots[:,0], roots[:,1], f2(roots), color='red')
+            for root in roots:
+                ax.scatter(root[0],root[1],f2(root), color='black')
+
+        ax = fig.add_subplot(121)
+        ax.contourf(x,y,z, cmap=cmaps.viridis, levels=np.linspace(-2,1,40), label='$f(x) = -\cos(x^2 + y^2) - e^{-(x^2 + y^2)}$')
+        if len(roots) > 0:
+            ax.plot(roots[:,0],roots[:,1], color='red')
+            for root in roots:
+                ax.scatter(root[0],root[1], color='white')
+        ax.set_xlim(-2,2)
+        ax.set_ylim(-2,2)
+        ax.set_xlabel('$x$')
+        ax.set_ylabel('$y$')
+
+        fig.suptitle("Newton's Method for Optimization")
+        plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+        plt.savefig('plots/optim_plt_{}.png'.format(i), bbox_inches='tight')
 
 def makeplots():
     plot_root_find()
+    plot_optimize()
 
 ############################
 ## Helper functions
@@ -137,7 +196,8 @@ def newtons_method_opt(gradient, hessian_inv, x0, iters=4):
     '''
     x = [x0]
     for i in range(iters):
-        x.append(x[-1] - np.dot(hessian_inv(x[-1]), grad(x[-1])))
+        correction = np.dot(hessian_inv(x[-1]), gradient(x[-1]))
+        x.append(x[-1] - correction)
     return x
 
 def points(f,start,stop,num):
@@ -162,6 +222,5 @@ def points(f,start,stop,num):
 ############################
 ## Main
 ############################
-'''
 if __name__ == '__main__':
-    makeplots()'''
+    makeplots()
