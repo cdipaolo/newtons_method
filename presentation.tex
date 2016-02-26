@@ -108,6 +108,21 @@
 %% Plots of Optimizing f: R^2 -> R   %%
 \begin{frame}
     \frametitle{Optimizing $f : \RR^n \mapsto \RR$}
+    Initial $x_0 = \m{1&0.6}$, $f(x) = -\cos(x^2 + y^2) - e^{-(x^2 + y^2)}$\\
+    \begin{center}
+        \includegraphics<1>[width=4in]{plots/optim_plt_0.png}
+        \includegraphics<2>[width=4in]{plots/optim_plt_1.png}
+        \includegraphics<3>[width=4in]{plots/optim_plt_2.png}
+        \includegraphics<4>[width=4in]{plots/optim_plt_3.png}
+    \end{center}
+    \begin{align*}
+        \only<1>{&}
+        \only<2>{&x_0 = \m{1&0.6} &\;\;\; \Delta = 1.1661}
+        \only<3>{&x_1 = \m{-0.1167&-0.0700} &\;\;\; \Delta = 0.1361}
+        \only<4>{&x_2 = \m{-7.8\times10^{-5}&-4.7\times10^{-5}} &\;\;\; \Delta = 9.15\times10^{-5}}
+        %\only<4>{x_3 = \m{0&-6.8\times10^{-21}} &\;\;\; \Delta = 6.78\times10^{-21}}
+    \end{align*}
+    \only<4>{Converges in $4$ iterations.}
 \end{frame}
 
 \end{document}

@@ -119,7 +119,7 @@ def plot_optimize(num_points=50):
     # print progression of roots
     print('\n\n==> Optimization of a Function f : R^2 -> R')
     for i,root in enumerate(root_L):
-        print('==> Root {} : {} | D = {} | f {}'.format(i, root, np.abs(root-root_L[-1]), f2(root)))
+        print('==> Root {} : {} | D = {} | f {}'.format(i, root, np.linalg.norm(np.abs(root-root_L[-1])), f2(root)))
     for i in range(len(root_L[:5])-1):
         roots = np.array(root_L[:i])
 
@@ -154,7 +154,7 @@ def plot_optimize(num_points=50):
         ax.set_xlabel('$x$')
         ax.set_ylabel('$y$')
 
-        fig.suptitle("Newton's Method for Optimization")
+        #fig.suptitle("Newton's Method for Optimization")
         plt.tight_layout(rect=[0, 0.03, 1, 0.95])
         plt.savefig('plots/optim_plt_{}.png'.format(i), bbox_inches='tight')
 
