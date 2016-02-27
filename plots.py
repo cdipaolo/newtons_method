@@ -11,7 +11,7 @@ import colormaps as cmaps
 ## Use Function f1(x) = exp(1/(3x)) - cos(x/2) + (x-1)(x-3)^2-1.5
 ##              f1'(x)= (x-3)^2 + 2(x-3)(x-1) + exp(1/(3x))/(3x*x) + sin(x/2)/2
 f1 = lambda x: np.exp(1/(3*x)) - np.cos(x/2) + (x-1)*(x-3)*(x-3) - 1.5
-f1prime = lambda x: (x-3)*(x-3) + 2*(x-3)*(x-1) + np.exp(1/(3*x))/(3*x*x) + np.sin(x/2)/2
+f1prime = lambda x: (x-3)*(x-3) + 2*(x-3)*(x-1) - np.exp(1/(3*x))/(3*x*x) + np.sin(x/2)/2
 
 def plot_root_find():
     '''
@@ -19,11 +19,11 @@ def plot_root_find():
     of f1 and plots that
     '''
     print('==> Finding Roots of a Function f : R -> R')
-    root_L = newtons_method(f1, f1prime, 0.4, iters=28)
+    root_L = newtons_method(f1, f1prime, 0.4, iters=10)
     # print progression of roots
     for i,root in enumerate(root_L[:28]):
         print('==> Root {} : {} | D = {}'.format(i, root, np.abs(root-root_L[-1])))
-    for i in range(len(root_L[:5])-1):
+    for i in range(len(root_L[:4])-1):
         roots = root_L[:i+1]
         fig, ax = plt.subplots()
         x, fx = points(f1,0.2, 4, 1000)
@@ -108,7 +108,7 @@ def plot_f2(num_points = 20):
     plt.ylabel('$y$')
     plt.show()
 
-def plot_optimize(num_points=50):
+def plot_optimize(num_points=100):
     '''
     uses newton's method to optimize
     a function
@@ -128,31 +128,31 @@ def plot_optimize(num_points=50):
         z = -np.cos(x**2 + y**2) - np.exp(-x**2 - y**2)
 
         fig = plt.figure(figsize=plt.figaspect(0.5))
-        ax = fig.add_subplot(122, projection='3d')
+        ax1 = fig.add_subplot(122, projection='3d')
 
-        ax.plot_surface(x,y,z, cmap=cmaps.viridis, rstride=1, cstride=1, linewidth=0, color='red', alpha=0.5)
-        ax.set_xlim3d(-2,2)
-        ax.set_ylim3d(-2,2)
-        ax.set_zlim3d(-2,1)
-        ax.set_xlabel('$x$')
-        ax.set_ylabel('$y$')
-        ax.set_zlabel('$z$')
+        ax1.plot_surface(x,y,z, cmap=cmaps.viridis, rstride=1, cstride=1, linewidth=0, color='red', alpha=0.5)
+        ax1.set_xlim3d(-2,2)
+        ax1.set_ylim3d(-2,2)
+        ax1.set_zlim3d(-2,1)
+        ax1.set_xlabel('$x$')
+        ax1.set_ylabel('$y$')
+        ax1.set_zlabel('$z$')
 
         if len(roots) > 0:
-            ax.plot(roots[:,0], roots[:,1], f2(roots), color='red')
+            ax1.plot(roots[:,0], roots[:,1], f2(roots), color='red')
             for root in roots:
-                ax.scatter(root[0],root[1],f2(root), color='black')
+                ax1.scatter(root[0],root[1],f2(root), color='black')
 
-        ax = fig.add_subplot(121)
-        ax.contourf(x,y,z, cmap=cmaps.viridis, levels=np.linspace(-2,1,40), label='$f(x) = -\cos(x^2 + y^2) - e^{-(x^2 + y^2)}$')
+        ax2 = fig.add_subplot(121)
+        ax2.contourf(x,y,z, cmap=cmaps.viridis, levels=np.linspace(-2,1,40), label='$f(x) = -\cos(x^2 + y^2) - e^{-(x^2 + y^2)}$')
         if len(roots) > 0:
-            ax.plot(roots[:,0],roots[:,1], color='red')
+            ax2.plot(roots[:,0],roots[:,1], color='red')
             for root in roots:
-                ax.scatter(root[0],root[1], color='white')
-        ax.set_xlim(-2,2)
-        ax.set_ylim(-2,2)
-        ax.set_xlabel('$x$')
-        ax.set_ylabel('$y$')
+                ax2.scatter(root[0],root[1], color='white')
+        ax2.set_xlim(-2,2)
+        ax2.set_ylim(-2,2)
+        ax2.set_xlabel('$x$')
+        ax2.set_ylabel('$y$')
 
         #fig.suptitle("Newton's Method for Optimization")
         plt.tight_layout(rect=[0, 0.03, 1, 0.95])
